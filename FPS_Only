@@ -1,5 +1,5 @@
--- 🔥 HTP Ultimate FPS Hub V9.0 FULL MERGED by Ajani Ngawi - All Features in One! 🔥🍱
--- Gabung: GUI neon animasi, Speed/Jump textbox, Camera FPS/Free, ESP persistent (join/mati/respawn), Aimbot LOS, Spin, FOV circle
+-- 🔥 HTP Ultimate Exploit Hub V7.4 - Aimbot Head/Body Toggle + LOS 🔥
+-- Full Gabungan: Draggable GUI + Inf Jump + Spin + ESP + Third Person + Aim Target Pilihan
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -10,177 +10,137 @@ local player = Players.LocalPlayer
 local camera = WS.CurrentCamera
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "HTP_Ultimate_V9_Full"
+gui.Name = "HTP_Ultimate"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
 -- =============================================
--- NEON GUI + SMOOTH ANIMATIONS (V8/V9 Style)
+-- GUI Neon + Animasi + Draggable Toggle
 -- =============================================
+
 local main = Instance.new("Frame")
-main.Size = UDim2.new(0, 420, 0, 800)
-main.Position = UDim2.new(0.5, -210, 1.3, 0)
+main.Size = UDim2.new(0, 400, 0, 620) -- sedikit diperbesar untuk tombol baru
+main.Position = UDim2.new(0.5, -200, 1.2, 0)
 main.BackgroundColor3 = Color3.fromRGB(10, 10, 25)
 main.BorderSizePixel = 0
 main.Visible = false
 main.Parent = gui
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 20)
+corner.CornerRadius = UDim.new(0, 16)
 corner.Parent = main
-
-local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 120, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 0, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 200))
-}
-gradient.Rotation = 45
-gradient.Parent = main
 
 local stroke = Instance.new("UIStroke")
 stroke.Color = Color3.fromRGB(0, 255, 200)
-stroke.Thickness = 3
-stroke.Transparency = 0.2
+stroke.Thickness = 2.5
+stroke.Transparency = 0.3
 stroke.Parent = main
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1,0,0,50)
-title.BackgroundTransparency = 1
-title.Text = "🔥 HTP ULTIMATE FPS HUB V9.0 by Ajani 🔥🍱"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Size = UDim2.new(1,0,0,45)
+title.BackgroundColor3 = Color3.fromRGB(18, 18, 48)
+title.Text = "HTP ULTIMATE HUB 🔥"
+title.TextColor3 = Color3.fromRGB(120, 255, 220)
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 22
+title.TextSize = 20
 title.Parent = main
 
 local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0,45,0,45)
-closeBtn.Position = UDim2.new(1,-50,0,3)
-closeBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 80)
-closeBtn.Text = "✕"
+closeBtn.Size = UDim2.new(0,40,0,40)
+closeBtn.Position = UDim2.new(1,-48,0,3)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 70, 90)
+closeBtn.Text = "X"
 closeBtn.TextColor3 = Color3.new(1,1,1)
 closeBtn.Font = Enum.Font.GothamBold
-closeBtn.TextSize = 20
+closeBtn.TextSize = 18
 closeBtn.Parent = main
 
 local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0,12)
+closeCorner.CornerRadius = UDim.new(0,10)
 closeCorner.Parent = closeBtn
 
 local scroll = Instance.new("ScrollingFrame")
-scroll.Size = UDim2.new(1,-20,1,-90)
-scroll.Position = UDim2.new(0,10,0,60)
+scroll.Size = UDim2.new(1,-20,1,-80)
+scroll.Position = UDim2.new(0,10,0,55)
 scroll.BackgroundTransparency = 1
-scroll.ScrollBarThickness = 6
-scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 200)
+scroll.ScrollBarThickness = 5
+scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 220, 180)
 scroll.CanvasSize = UDim2.new(0,0,0,0)
 scroll.Parent = main
 
 local listLayout = Instance.new("UIListLayout")
-listLayout.Padding = UDim.new(0,15)
+listLayout.Padding = UDim.new(0,12)
 listLayout.Parent = scroll
 
 listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    scroll.CanvasSize = UDim2.new(0,0,0,listLayout.AbsoluteContentSize.Y + 50)
+    scroll.CanvasSize = UDim2.new(0,0,0,listLayout.AbsoluteContentSize.Y + 40)
 end)
 
--- Animasi Open/Close
-local tweenOpen = TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-local tweenClose = TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
-local tweenHover = TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+-- Animasi buka/tutup
+local tweenInfo = TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
 local function openPanel()
     main.Visible = true
-    main.Size = UDim2.new(0, 0, 0, 0)
-    stroke.Transparency = 1
-    TS:Create(main, tweenOpen, {Size = UDim2.new(0, 420, 0, 800)}):Play()
-    TS:Create(main, tweenOpen, {Position = UDim2.new(0.5, -210, 0.5, -400)}):Play()
-    TS:Create(stroke, TweenInfo.new(0.5), {Transparency = 0.2}):Play()
+    main.Position = UDim2.new(0.5, -200, 1.2, 0)
+    TS:Create(main, tweenInfo, {Position = UDim2.new(0.5, -200, 0.5, -310)}):Play()
 end
 
 local function closePanel()
-    local tweenPos = TS:Create(main, tweenClose, {Position = UDim2.new(0.5, -210, 1.3, 0)})
-    local tweenSize = TS:Create(main, tweenClose, {Size = UDim2.new(0, 0, 0, 0)})
-    tweenPos:Play()
-    tweenSize:Play()
-    TS:Create(stroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
-    tweenPos.Completed:Connect(function() main.Visible = false end)
+    local tween = TS:Create(main, tweenInfo, {Position = UDim2.new(0.5, -200, 1.2, 0)})
+    tween:Play()
+    tween.Completed:Connect(function() main.Visible = false end)
 end
 
--- Toggle Button Draggable + Glow
+-- Tombol HTP draggable
 local toggleBtn = Instance.new("TextButton")
-toggleBtn.Size = UDim2.new(0, 70, 0, 70)
-toggleBtn.Position = UDim2.new(1, -90, 0, 20)
+toggleBtn.Size = UDim2.new(0, 60, 0, 60)
+toggleBtn.Position = UDim2.new(1, -80, 0, 20)
 toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 220, 160)
 toggleBtn.Text = "HTP"
 toggleBtn.TextColor3 = Color3.new(1,1,1)
 toggleBtn.Font = Enum.Font.GothamBlack
-toggleBtn.TextSize = 24
+toggleBtn.TextSize = 20
 toggleBtn.Parent = gui
 
-local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0,15)
-toggleCorner.Parent = toggleBtn
-
-local toggleStroke = Instance.new("UIStroke")
-toggleStroke.Color = Color3.fromRGB(255,255,255)
-toggleStroke.Thickness = 2
-toggleStroke.Parent = toggleBtn
-
--- Draggable Toggle
 local dragging, dragStart, startPos
 toggleBtn.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
         dragStart = input.Position
         startPos = toggleBtn.Position
-        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
     end
 end)
+
 toggleBtn.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        if dragging then
+            local delta = input.Position - dragStart
+            toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
     end
 end)
 
 toggleBtn.MouseButton1Click:Connect(function()
-    if main.Visible then 
-        closePanel() 
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 220, 160)
-    else 
-        openPanel() 
-        toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 120)
-    end
-end)
-
--- Hover Effects
-toggleBtn.MouseEnter:Connect(function()
-    TS:Create(toggleBtn, tweenHover, {Size = UDim2.new(0, 80, 0, 80), Rotation = 360}):Play()
-end)
-toggleBtn.MouseLeave:Connect(function()
-    TS:Create(toggleBtn, tweenHover, {Size = UDim2.new(0, 70, 0, 70), Rotation = 0}):Play()
+    if main.Visible then closePanel() toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 220, 160)
+    else openPanel() toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 90, 110) end
 end)
 
 closeBtn.MouseButton1Click:Connect(closePanel)
 
 -- =============================================
--- STATE VARIABLES
+-- STATE & UTILITY
 -- =============================================
-local state = { 
-    infjump = false, spin = false, aimbot = false, esp = false, thirdperson = false,
-    speedhack = false, fpscam = false, freecam = false 
-}
+
+local state = { infjump = false, spin = false, aimbot = false, esp = false, thirdperson = false }
 local movers = {}
 local espObjects = {}
-local connections = {}
-local spinAV, speedConn, jumpConn
+local spinAV
 local spinSpeed = 600
 local aimFOV = 120
-local aimTarget = "Head"
-local walkSpeed = 16
-local jumpPowerVal = 50
-local showHealthBar = false
+local aimTarget = "Head" -- default Head, bisa diganti ke "Torso"
 
 local fovCircle = Drawing.new("Circle")
 fovCircle.Visible = false
@@ -188,91 +148,21 @@ fovCircle.Radius = aimFOV
 fovCircle.NumSides = 64
 fovCircle.Thickness = 2
 fovCircle.Color = Color3.fromRGB(0, 255, 0)
-fovCircle.Filled = false
 fovCircle.Transparency = 0.7
+fovCircle.Filled = false
 
 local function getHum() return player.Character and player.Character:FindFirstChildOfClass("Humanoid") end
 local function getHRP() return player.Character and player.Character:FindFirstChild("HumanoidRootPart") end
-local function getHead() return player.Character and player.Character:FindFirstChild("Head") end
-
-local function addConnection(name, conn)
-    connections[name] = conn
-end
 
 local function cleanMovers()
-    for _, obj in pairs(movers) do pcall(function() obj:Destroy() end) end
+    for _, obj in movers do pcall(obj.Destroy, obj) end
     movers = {}
 end
 
 -- =============================================
--- SPEED HACK TEXTBOX + TOGGLE
+-- Infinite Jump + JumpPower TextBox
 -- =============================================
-local speedSection = Instance.new("Frame")
-speedSection.Size = UDim2.new(1,-16,0,90)
-speedSection.BackgroundTransparency = 1
-speedSection.Parent = scroll
 
-local speedTitle = Instance.new("TextLabel")
-speedTitle.Size = UDim2.new(1,0,0,28)
-speedTitle.BackgroundTransparency = 1
-speedTitle.Text = "🚀 Speed Hack (Textbox)"
-speedTitle.TextColor3 = Color3.fromRGB(255, 200, 100)
-speedTitle.Font = Enum.Font.GothamBold
-speedTitle.TextSize = 16
-speedTitle.TextXAlignment = Enum.TextXAlignment.Left
-speedTitle.Parent = speedSection
-
-local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.new(0.48,0,0,38)
-speedBox.Position = UDim2.new(0,0,0,32)
-speedBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
-speedBox.TextColor3 = Color3.fromRGB(220,240,255)
-speedBox.PlaceholderText = "WalkSpeed (16)"
-speedBox.Text = "16"
-speedBox.Font = Enum.Font.Gotham
-speedBox.TextSize = 16
-speedBox.Parent = speedSection
-
-local speedToggle = Instance.new("TextButton")
-speedToggle.Size = UDim2.new(0.48,0,0,38)
-speedToggle.Position = UDim2.new(0.52,0,0,32)
-speedToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
-speedToggle.Text = "Speed: OFF"
-speedToggle.TextColor3 = Color3.new(1,1,1)
-speedToggle.Font = Enum.Font.GothamSemibold
-speedToggle.TextSize = 15
-speedToggle.Parent = speedSection
-
-local speedActive = false
-speedToggle.MouseButton1Click:Connect(function()
-    speedActive = not speedActive
-    state.speedhack = speedActive
-    speedToggle.Text = "Speed: " .. (speedActive and "ON" or "OFF")
-    speedToggle.BackgroundColor3 = speedActive and Color3.fromRGB(255,200,80) or Color3.fromRGB(100,100,120)
-    walkSpeed = tonumber(speedBox.Text) or 16
-    
-    if speedActive then
-        speedConn = RS.Heartbeat:Connect(function()
-            local hum = getHum()
-            if hum then hum.WalkSpeed = walkSpeed end
-        end)
-        addConnection("speed", speedConn)
-    else
-        if speedConn then speedConn:Disconnect() end
-    end
-end)
-
-speedBox.FocusLost:Connect(function()
-    walkSpeed = tonumber(speedBox.Text) or 16
-    if state.speedhack then
-        local hum = getHum()
-        if hum then hum.WalkSpeed = walkSpeed end
-    end
-end)
-
--- =============================================
--- JUMPPOWER TEXTBOX + INF JUMP
--- =============================================
 local jumpSection = Instance.new("Frame")
 jumpSection.Size = UDim2.new(1,-16,0,90)
 jumpSection.BackgroundTransparency = 1
@@ -281,23 +171,23 @@ jumpSection.Parent = scroll
 local jumpTitle = Instance.new("TextLabel")
 jumpTitle.Size = UDim2.new(1,0,0,28)
 jumpTitle.BackgroundTransparency = 1
-jumpTitle.Text = "🦘 JumpPower & Inf Jump"
-jumpTitle.TextColor3 = Color3.fromRGB(100, 255, 150)
+jumpTitle.Text = "Infinite Jump & JumpPower"
+jumpTitle.TextColor3 = Color3.fromRGB(200,220,255)
 jumpTitle.Font = Enum.Font.GothamBold
 jumpTitle.TextSize = 16
 jumpTitle.TextXAlignment = Enum.TextXAlignment.Left
 jumpTitle.Parent = jumpSection
 
-local jumpBox = Instance.new("TextBox")
-jumpBox.Size = UDim2.new(0.48,0,0,38)
-jumpBox.Position = UDim2.new(0,0,0,32)
-jumpBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
-jumpBox.TextColor3 = Color3.fromRGB(220,240,255)
-jumpBox.PlaceholderText = "JumpPower (50)"
-jumpBox.Text = "50"
-jumpBox.Font = Enum.Font.Gotham
-jumpBox.TextSize = 16
-jumpBox.Parent = jumpSection
+local jumpPowerBox = Instance.new("TextBox")
+jumpPowerBox.Size = UDim2.new(0.48,0,0,38)
+jumpPowerBox.Position = UDim2.new(0,0,0,32)
+jumpPowerBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
+jumpPowerBox.TextColor3 = Color3.fromRGB(220,240,255)
+jumpPowerBox.PlaceholderText = "JumpPower (default 50)"
+jumpPowerBox.Text = "50"
+jumpPowerBox.Font = Enum.Font.Gotham
+jumpPowerBox.TextSize = 16
+jumpPowerBox.Parent = jumpSection
 
 local infJumpBtn = Instance.new("TextButton")
 infJumpBtn.Size = UDim2.new(0.48,0,0,38)
@@ -309,10 +199,12 @@ infJumpBtn.Font = Enum.Font.GothamSemibold
 infJumpBtn.TextSize = 15
 infJumpBtn.Parent = jumpSection
 
+local infJumpActive = false
 infJumpBtn.MouseButton1Click:Connect(function()
-    state.infjump = not state.infjump
-    infJumpBtn.Text = "Inf Jump: " .. (state.infjump and "ON" or "OFF")
-    infJumpBtn.BackgroundColor3 = state.infjump and Color3.fromRGB(100,255,150) or Color3.fromRGB(100,100,120)
+    infJumpActive = not infJumpActive
+    state.infjump = infJumpActive
+    infJumpBtn.Text = "Inf Jump: " .. (infJumpActive and "ON" or "OFF")
+    infJumpBtn.BackgroundColor3 = infJumpActive and Color3.fromRGB(60,200,100) or Color3.fromRGB(100,100,120)
 end)
 
 UIS.JumpRequest:Connect(function()
@@ -322,215 +214,323 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
-jumpBox.FocusLost:Connect(function()
-    jumpPowerVal = tonumber(jumpBox.Text) or 50
-end)
-
-jumpConn = RS.Heartbeat:Connect(function()
-    local hum = getHum()
-    if hum then hum.JumpPower = jumpPowerVal end
-end)
-addConnection("jump", jumpConn)
-
--- =============================================
--- CAMERA CONTROLS (FPS / FREE / RESET)
--- =============================================
-local camSection = Instance.new("Frame")
-camSection.Size = UDim2.new(1,-16,0,140)
-camSection.BackgroundTransparency = 1
-camSection.Parent = scroll
-
-local camTitle = Instance.new("TextLabel")
-camTitle.Size = UDim2.new(1,0,0,28)
-camTitle.BackgroundTransparency = 1
-camTitle.Text = "🎥 Camera Settings"
-camTitle.TextColor3 = Color3.fromRGB(150, 255, 255)
-camTitle.Font = Enum.Font.GothamBold
-camTitle.TextSize = 16
-camTitle.TextXAlignment = Enum.TextXAlignment.Left
-camTitle.Parent = camSection
-
-local fpsBtn = Instance.new("TextButton")
-fpsBtn.Size = UDim2.new(0.3,0,0,38)
-fpsBtn.Position = UDim2.new(0,0,0,35)
-fpsBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
-fpsBtn.Text = "FPS Cam: OFF"
-fpsBtn.TextColor3 = Color3.new(1,1,1)
-fpsBtn.Font = Enum.Font.GothamSemibold
-fpsBtn.TextSize = 14
-fpsBtn.Parent = camSection
-
-local freeBtn = Instance.new("TextButton")
-freeBtn.Size = UDim2.new(0.3,0,0,38)
-freeBtn.Position = UDim2.new(0.34,0,0,35)
-freeBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
-freeBtn.Text = "Free Cam: OFF"
-freeBtn.TextColor3 = Color3.new(1,1,1)
-freeBtn.Font = Enum.Font.GothamSemibold
-freeBtn.TextSize = 14
-freeBtn.Parent = camSection
-
-local resetBtn = Instance.new("TextButton")
-resetBtn.Size = UDim2.new(0.3,0,0,38)
-resetBtn.Position = UDim2.new(0.67,0,0,35)
-resetBtn.BackgroundColor3 = Color3.fromRGB(100,150,255)
-resetBtn.Text = "Reset Cam"
-resetBtn.TextColor3 = Color3.new(1,1,1)
-resetBtn.Font = Enum.Font.GothamSemibold
-resetBtn.TextSize = 14
-resetBtn.Parent = camSection
-
-fpsBtn.MouseButton1Click:Connect(function()
-    state.fpscam = not state.fpscam
-    fpsBtn.Text = "FPS Cam: " .. (state.fpscam and "ON" or "OFF")
-    fpsBtn.BackgroundColor3 = state.fpscam and Color3.fromRGB(80, 200, 255) or Color3.fromRGB(100,100,120)
-    player.CameraMode = state.fpscam and Enum.CameraMode.LockFirstPerson or Enum.CameraMode.Classic
-end)
-
-freeBtn.MouseButton1Click:Connect(function()
-    state.freecam = not state.freecam
-    freeBtn.Text = "Free Cam: " .. (state.freecam and "ON" or "OFF")
-    freeBtn.BackgroundColor3 = state.freecam and Color3.fromRGB(150, 255, 100) or Color3.fromRGB(100,100,120)
-    player.CameraMode = state.freecam and Enum.CameraMode.Classic or Enum.CameraMode.LockFirstPerson
-end)
-
-resetBtn.MouseButton1Click:Connect(function()
-    state.fpscam = false
-    state.freecam = false
-    player.CameraMode = Enum.CameraMode.Classic
-    fpsBtn.Text = "FPS Cam: OFF"
-    fpsBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
-    freeBtn.Text = "Free Cam: OFF"
-    freeBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+jumpPowerBox.FocusLost:Connect(function()
+    local val = tonumber(jumpPowerBox.Text)
+    if val then
+        local hum = getHum()
+        if hum then hum.JumpPower = val end
+    end
 end)
 
 -- =============================================
--- ESP PERSISTENT (All Join, Respawn, Dead Hide)
+-- Spin dengan TextBox
 -- =============================================
-local espSection = Instance.new("Frame")
-espSection.Size = UDim2.new(1,-16,0,100)
-espSection.BackgroundTransparency = 1
-espSection.Parent = scroll
 
-local espTitle = Instance.new("TextLabel")
-espTitle.Size = UDim2.new(1,0,0,28)
-espTitle.BackgroundTransparency = 1
-espTitle.Text = "👁️ ESP Persistent (All Players)"
-espTitle.TextColor3 = Color3.fromRGB(255, 100, 255)
-espTitle.Font = Enum.Font.GothamBold
-espTitle.TextSize = 16
-espTitle.TextXAlignment = Enum.TextXAlignment.Left
-espTitle.Parent = espSection
+local spinSection = Instance.new("Frame")
+spinSection.Size = UDim2.new(1,-16,0,80)
+spinSection.BackgroundTransparency = 1
+spinSection.Parent = scroll
 
-local espToggle = Instance.new("TextButton")
-espToggle.Size = UDim2.new(0.6,0,0,38)
-espToggle.Position = UDim2.new(0,0,0,35)
-espToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
-espToggle.Text = "ESP: OFF"
-espToggle.TextColor3 = Color3.new(1,1,1)
-espToggle.Font = Enum.Font.GothamSemibold
-espToggle.TextSize = 15
-espToggle.Parent = espSection
+local spinTitle = Instance.new("TextLabel")
+spinTitle.Size = UDim2.new(1,0,0,28)
+spinTitle.BackgroundTransparency = 1
+spinTitle.Text = "Spin Exploit"
+spinTitle.TextColor3 = Color3.fromRGB(255,180,100)
+spinTitle.Font = Enum.Font.GothamBold
+spinTitle.TextSize = 16
+spinTitle.TextXAlignment = Enum.TextXAlignment.Left
+spinTitle.Parent = spinSection
 
-local healthBarToggle = Instance.new("TextButton")
-healthBarToggle.Size = UDim2.new(0.38,0,0,38)
-healthBarToggle.Position = UDim2.new(0.62,0,0,35)
-healthBarToggle.BackgroundColor3 = Color3.fromRGB(100,150,255)
-healthBarToggle.Text = "Health Bar: OFF"
-healthBarToggle.TextColor3 = Color3.new(1,1,1)
-healthBarToggle.Font = Enum.Font.GothamSemibold
-healthBarToggle.TextSize = 13
-healthBarToggle.Parent = espSection
+local spinBox = Instance.new("TextBox")
+spinBox.Size = UDim2.new(0.48,0,0,38)
+spinBox.Position = UDim2.new(0,0,0,32)
+spinBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
+spinBox.TextColor3 = Color3.fromRGB(220,240,255)
+spinBox.PlaceholderText = "Speed (600)"
+spinBox.Text = "600"
+spinBox.Font = Enum.Font.Gotham
+spinBox.TextSize = 16
+spinBox.Parent = spinSection
 
-state.esp = false
+local spinToggle = Instance.new("TextButton")
+spinToggle.Size = UDim2.new(0.48,0,0,38)
+spinToggle.Position = UDim2.new(0.52,0,0,32)
+spinToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
+spinToggle.Text = "Spin: OFF"
+spinToggle.TextColor3 = Color3.new(1,1,1)
+spinToggle.Font = Enum.Font.GothamSemibold
+spinToggle.TextSize = 15
+spinToggle.Parent = spinSection
 
-local function createESP(plr)
-    if plr == player or not plr.Character then return end
-    local char = plr.Character
-    local hrp = char:FindFirstChild("HumanoidRootPart")
+spinToggle.MouseButton1Click:Connect(function()
+    state.spin = not state.spin
+    local hrp = getHRP()
+    if not hrp then return end
+
+    spinSpeed = tonumber(spinBox.Text) or 600
+
+    cleanMovers()
+
+    if state.spin then
+        spinAV = Instance.new("AngularVelocity")
+        spinAV.AngularVelocity = Vector3.new(0, spinSpeed, 0)
+        spinAV.MaxTorque = Vector3.new(0, math.huge, 0)
+        spinAV.Parent = hrp
+        table.insert(movers, spinAV)
+        spinToggle.BackgroundColor3 = Color3.fromRGB(255,80,80)
+        spinToggle.Text = "Spin: ON"
+    else
+        spinToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
+        spinToggle.Text = "Spin: OFF"
+    end
+end)
+
+-- =============================================
+-- Aimbot dengan Pilihan Head / Body + LOS Check
+-- =============================================
+
+local aimSection = Instance.new("Frame")
+aimSection.Size = UDim2.new(1,-16,0,130) -- diperbesar untuk tombol tambahan
+aimSection.BackgroundTransparency = 1
+aimSection.Parent = scroll
+
+local aimTitle = Instance.new("TextLabel")
+aimTitle.Size = UDim2.new(1,0,0,28)
+aimTitle.BackgroundTransparency = 1
+aimTitle.Text = "Aimbot (FOV + LOS + Head/Body)"
+aimTitle.TextColor3 = Color3.fromRGB(255,120,200)
+aimTitle.Font = Enum.Font.GothamBold
+aimTitle.TextSize = 16
+aimTitle.TextXAlignment = Enum.TextXAlignment.Left
+aimTitle.Parent = aimSection
+
+local fovBox = Instance.new("TextBox")
+fovBox.Size = UDim2.new(0.48,0,0,38)
+fovBox.Position = UDim2.new(0,0,0,32)
+fovBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
+fovBox.TextColor3 = Color3.fromRGB(220,240,255)
+fovBox.PlaceholderText = "FOV (120)"
+fovBox.Text = "120"
+fovBox.Font = Enum.Font.Gotham
+fovBox.TextSize = 16
+fovBox.Parent = aimSection
+
+local aimToggle = Instance.new("TextButton")
+aimToggle.Size = UDim2.new(0.48,0,0,38)
+aimToggle.Position = UDim2.new(0.52,0,0,32)
+aimToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
+aimToggle.Text = "Aimbot: OFF"
+aimToggle.TextColor3 = Color3.new(1,1,1)
+aimToggle.Font = Enum.Font.GothamSemibold
+aimToggle.TextSize = 15
+aimToggle.Parent = aimSection
+
+-- Tombol pilih target: Head atau Body
+local targetBtn = Instance.new("TextButton")
+targetBtn.Size = UDim2.new(1,-16,0,38)
+targetBtn.Position = UDim2.new(0,0,0,75)
+targetBtn.BackgroundColor3 = Color3.fromRGB(80,80,140)
+targetBtn.Text = "Target: Head"
+targetBtn.TextColor3 = Color3.new(1,1,1)
+targetBtn.Font = Enum.Font.GothamSemibold
+targetBtn.TextSize = 15
+targetBtn.Parent = aimSection
+
+local currentTarget = "Head" -- default Head
+
+targetBtn.MouseButton1Click:Connect(function()
+    if currentTarget == "Head" then
+        currentTarget = "Torso"
+        targetBtn.Text = "Target: Body (Torso)"
+        targetBtn.BackgroundColor3 = Color3.fromRGB(120,80,160)
+    else
+        currentTarget = "Head"
+        targetBtn.Text = "Target: Head"
+        targetBtn.BackgroundColor3 = Color3.fromRGB(80,80,140)
+    end
+end)
+
+local aimbotEnabled = false
+local aimConn
+
+local function hasLOS(targetPart)
+    if not targetPart then return false end
+    local origin = camera.CFrame.Position
+    local direction = (targetPart.Position - origin).Unit * 1000
+
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.FilterDescendantsInstances = {player.Character or {}}
+
+    local result = WS:Raycast(origin, direction, params)
+    return result and result.Instance and result.Instance:IsDescendantOf(targetPart.Parent)
+end
+
+aimToggle.MouseButton1Click:Connect(function()
+    aimbotEnabled = not aimbotEnabled
+    aimToggle.Text = "Aimbot: " .. (aimbotEnabled and "ON" or "OFF")
+    aimToggle.BackgroundColor3 = aimbotEnabled and Color3.fromRGB(255,100,100) or Color3.fromRGB(100,100,120)
+    fovCircle.Visible = aimbotEnabled
+
+    if aimbotEnabled then
+        aimConn = RS.RenderStepped:Connect(function()
+            fovCircle.Radius = tonumber(fovBox.Text) or 120
+            local vp = camera.ViewportSize
+            local center = Vector2.new(vp.X / 2, vp.Y / 2)
+            fovCircle.Position = center
+
+            local closestPart = nil
+            local shortest = math.huge
+
+            for _, p in Players:GetPlayers() do
+                if p ~= player and p.Character then
+                    local targetPart = p.Character:FindFirstChild(currentTarget == "Head" and "Head" or "HumanoidRootPart")
+                    if targetPart then
+                        local screenPos, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+                        if onScreen then
+                            local d = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                            if d < fovCircle.Radius and d < shortest and hasLOS(targetPart) then
+                                shortest = d
+                                closestPart = targetPart
+                            end
+                        end
+                    end
+                end
+            end
+
+            if closestPart then
+                camera.CFrame = CFrame.new(camera.CFrame.Position, closestPart.Position)
+            end
+        end)
+    else
+        if aimConn then aimConn:Disconnect() aimConn = nil end
+    end
+end)
+
+fovBox.FocusLost:Connect(function()
+    local val = tonumber(fovBox.Text)
+    if val then fovCircle.Radius = val end
+end)
+
+-- =============================================
+-- ESP (Name + Distance Billboard)
+-- =============================================
+
+local espBtn = Instance.new("TextButton")
+espBtn.Size = UDim2.new(1,-16,0,50)
+espBtn.BackgroundColor3 = Color3.fromRGB(60,60,90)
+espBtn.Text = "ESP: OFF"
+espBtn.TextColor3 = Color3.fromRGB(200,200,255)
+espBtn.Font = Enum.Font.GothamSemibold
+espBtn.TextSize = 16
+espBtn.Parent = scroll
+
+local espEnabled = false
+local espTags = {}
+
+local function createESPTag(char, plr)
+    if not char or char:FindFirstChild("ESPTag") then return end
     local head = char:FindFirstChild("Head")
-    if not hrp or not head then return end
-    
-    local box = Drawing.new("Quad")
-    box.Thickness = 2
-    box.Color = Color3.fromRGB(0, 255, 0)
-    box.Transparency = 1
-    box.Filled = false
-    
-    local nameLabel = Drawing.new("Text")
-    nameLabel.Size = 16
-    nameLabel.Center = true
-    nameLabel.Outline = true
-    nameLabel.Color = Color3.fromRGB(255, 255, 255)
-    nameLabel.Font = 2
-    
-    local line = Drawing.new("Line")
-    line.Thickness = 2
-    line.Color = Color3.fromRGB(255, 0, 0)
-    line.Transparency = 1
-    
-    local healthBg = Drawing.new("Quad")
-    healthBg.Thickness = 3
-    healthBg.Color = Color3.fromRGB(0,0,0)
-    healthBg.Filled = true
-    healthBg.Transparency = 0.5
-    
-    local healthFg = Drawing.new("Quad")
-    healthFg.Thickness = 1
-    healthFg.Color = Color3.fromRGB(0, 255, 0)
-    healthFg.Filled = true
-    healthFg.Transparency = 0.7
-    
-    espObjects[plr.UserId] = {box = box, name = nameLabel, line = line, healthBg = healthBg, healthFg = healthFg, char = char, plr = plr}
+    if not head then return end
+
+    local tag = Instance.new("BillboardGui")
+    tag.Name = "ESPTag"
+    tag.Size = UDim2.new(0,200,0,50)
+    tag.StudsOffset = Vector3.new(0,2.5,0)
+    tag.AlwaysOnTop = true
+    tag.Parent = head
+
+    local nameLbl = Instance.new("TextLabel")
+    nameLbl.Size = UDim2.new(1,0,0.5,0)
+    nameLbl.BackgroundTransparency = 1
+    nameLbl.Text = plr.Name
+    nameLbl.TextColor3 = Color3.fromRGB(255,0,0)
+    nameLbl.TextStrokeTransparency = 0.5
+    nameLbl.Font = Enum.Font.GothamBold
+    nameLbl.TextScaled = true
+    nameLbl.Parent = tag
+
+    local distLbl = Instance.new("TextLabel")
+    distLbl.Size = UDim2.new(1,0,0.5,0)
+    distLbl.Position = UDim2.new(0,0,0.5,0)
+    distLbl.BackgroundTransparency = 1
+    distLbl.TextColor3 = Color3.fromRGB(255,255,255)
+    distLbl.Font = Enum.Font.Gotham
+    distLbl.TextScaled = true
+    distLbl.Parent = tag
+
+    espTags[plr] = {tag = tag, dist = distLbl}
 end
 
 local function updateESP()
-    for userId, data in pairs(espObjects) do
-        local plr = data.plr
-        local char = data.char
-        if plr and char and char.Parent then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            local hrp = char:FindFirstChild("HumanoidRootPart")
-            local head = char:FindFirstChild("Head")
-            
-            if hum and hum.Health > 0 and hrp and head then
-                local screenPos, onScreen = camera:WorldToViewportPoint(hrp.Position)
-                local headPos = camera:WorldToViewportPoint(head.Position + Vector3.new(0,0.5,0))
-                local legPos = camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,3,0))
-                
-                if onScreen then
-                    local size = (headPos - legPos).Magnitude
-                    data.box.PointA = Vector2.new(screenPos.X - size/2, headPos.Y)
-                    data.box.PointB = Vector2.new(screenPos.X + size/2, headPos.Y)
-                    data.box.PointC = Vector2.new(screenPos.X + size/2, legPos.Y)
-                    data.box.PointD = Vector2.new(screenPos.X - size/2, legPos.Y)
-                    data.box.Visible = true
-                    data.box.Color = hum.Health < 30 and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0)
-                    
-                    local dist = (hrp.Position - getHRP().Position).Magnitude
-                    data.name.Text = plr.Name .. "\n[" .. math.floor(dist) .. "]"
-                    data.name.Position = Vector2.new(screenPos.X, headPos.Y - 30)
-                    data.name.Visible = true
-                    
-                    data.line.From = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
-                    data.line.To = Vector2.new(screenPos.X, screenPos.Y)
-                    data.line.Visible = true
-                    
-                    if showHealthBar then
-                        local hpPercent = hum.Health / hum.MaxHealth
-                        local barHeight = size * 0.6
-                        local barWidth = 4
-                        local barPosY = legPos.Y + (size - barHeight)/2
-                        
-                        data.healthBg.Size = Vector2.new(barWidth, barHeight)
-                        data.healthBg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY)
-                        data.healthBg.Visible = true
-                        
-                        data.healthFg.Size = Vector2.new(barWidth * hpPercent, barHeight)
-                        data.healthFg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY + barHeight * (1 - hpPercent))
-                        data.healthFg.Color = Color3.fromRGB(255 * (1 - hpPercent), 255 * hpPercent, 0)
-                        data.healthFg.Visible = true
-                    end
-                else
-                    for _, obj in pairs({data.box, data.name, data.line, data.healthBg, data.healthFg}) do obj.Visible = false end
-        
+    for plr, data in pairs(espTags) do
+        local char = plr.Character
+        if char and data.tag then
+            local root = char:FindFirstChild("HumanoidRootPart")
+            if root then
+                local dist = math.floor((getHRP().Position - root.Position).Magnitude)
+                data.dist.Text = tostring(dist) .. "m"
+                data.tag.Enabled = espEnabled
+            else
+                data.tag.Enabled = false
+            end
+        end
+    end
+end
+
+espBtn.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    espBtn.Text = "ESP: " .. (espEnabled and "ON" or "OFF")
+    espBtn.BackgroundColor3 = espEnabled and Color3.fromRGB(120,220,170) or Color3.fromRGB(60,60,90)
+
+    if espEnabled then
+        for _, p in Players:GetPlayers() do
+            if p ~= player and p.Character then
+                createESPTag(p.Character, p)
+            end
+        end
+        RS.RenderStepped:Connect(updateESP)
+    else
+        for _, data in pairs(espTags) do
+            if data.tag then data.tag.Enabled = false end
+        end
+    end
+end)
+
+Players.PlayerAdded:Connect(function(p)
+    if espEnabled then
+        p.CharacterAdded:Connect(function(char)
+            task.wait(0.5)
+            createESPTag(char, p)
+        end)
+    end
+end)
+
+-- =============================================
+-- Third Person Toggle
+-- =============================================
+
+local povBtn = Instance.new("TextButton")
+povBtn.Size = UDim2.new(1,-16,0,50)
+povBtn.BackgroundColor3 = Color3.fromRGB(80,80,120)
+povBtn.Text = "Third Person: OFF"
+povBtn.TextColor3 = Color3.new(1,1,1)
+povBtn.Font = Enum.Font.GothamSemibold
+povBtn.TextSize = 16
+povBtn.Parent = scroll
+
+povBtn.MouseButton1Click:Connect(function()
+    state.thirdperson = not state.thirdperson
+    povBtn.Text = "Third Person: " .. (state.thirdperson and "ON" or "OFF")
+    povBtn.BackgroundColor3 = state.thirdperson and Color3.fromRGB(100,200,150) or Color3.fromRGB(80,80,120)
+
+    if state.thirdperson then
+        camera.CameraMode = Enum.CameraMode.Classic
+        camera.FieldOfView = 80
+    else
+        camera.CameraMode = Enum.CameraMode.LockFirstPerson
+        camera.FieldOfView = 70
+    end
+end)
+
+print("HTP V7.4 Loaded! Aimbot bisa pilih Head atau Body (klik tombol Target). Drag tombol HTP untuk pindah posisi. Semua fitur siap 🔥🎮")
