@@ -1,4 +1,6 @@
--- 🔥 HTP Ultimate FPS Hub V9.0 ESP PERSISTENT by Ajani Ngawi 🔥🍱
+-- 🔥 HTP Ultimate FPS Hub V9.0 FULL MERGED by Ajani Ngawi - All Features in One! 🔥🍱
+-- Gabung: GUI neon animasi, Speed/Jump textbox, Camera FPS/Free, ESP persistent (join/mati/respawn), Aimbot LOS, Spin, FOV circle
+
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RS = game:GetService("RunService")
@@ -8,25 +10,412 @@ local player = Players.LocalPlayer
 local camera = WS.CurrentCamera
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "HTP_Ultimate_V9_ESP"
+gui.Name = "HTP_Ultimate_V9_Full"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- [GUI CODE SAMA SEPERTI V8 - NEON ANIMASI, SPEED/JUMP/CAMERA SECTION - SKIP UNTUK SINGKAT, COPY DARI V8]
--- ... (Paste seluruh GUI code dari respons V8 di atas, termasuk toggleBtn, main frame, sections speed/jump/cam/spin/aimbot)
+-- =============================================
+-- NEON GUI + SMOOTH ANIMATIONS (V8/V9 Style)
+-- =============================================
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 420, 0, 800)
+main.Position = UDim2.new(0.5, -210, 1.3, 0)
+main.BackgroundColor3 = Color3.fromRGB(10, 10, 25)
+main.BorderSizePixel = 0
+main.Visible = false
+main.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 20)
+corner.Parent = main
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 120, 255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 0, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 200))
+}
+gradient.Rotation = 45
+gradient.Parent = main
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(0, 255, 200)
+stroke.Thickness = 3
+stroke.Transparency = 0.2
+stroke.Parent = main
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,0,0,50)
+title.BackgroundTransparency = 1
+title.Text = "🔥 HTP ULTIMATE FPS HUB V9.0 by Ajani 🔥🍱"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 22
+title.Parent = main
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0,45,0,45)
+closeBtn.Position = UDim2.new(1,-50,0,3)
+closeBtn.BackgroundColor3 = Color3.fromRGB(255, 60, 80)
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 20
+closeBtn.Parent = main
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0,12)
+closeCorner.Parent = closeBtn
+
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1,-20,1,-90)
+scroll.Position = UDim2.new(0,10,0,60)
+scroll.BackgroundTransparency = 1
+scroll.ScrollBarThickness = 6
+scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 200)
+scroll.CanvasSize = UDim2.new(0,0,0,0)
+scroll.Parent = main
+
+local listLayout = Instance.new("UIListLayout")
+listLayout.Padding = UDim.new(0,15)
+listLayout.Parent = scroll
+
+listLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scroll.CanvasSize = UDim2.new(0,0,0,listLayout.AbsoluteContentSize.Y + 50)
+end)
+
+-- Animasi Open/Close
+local tweenOpen = TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local tweenClose = TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+local tweenHover = TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+
+local function openPanel()
+    main.Visible = true
+    main.Size = UDim2.new(0, 0, 0, 0)
+    stroke.Transparency = 1
+    TS:Create(main, tweenOpen, {Size = UDim2.new(0, 420, 0, 800)}):Play()
+    TS:Create(main, tweenOpen, {Position = UDim2.new(0.5, -210, 0.5, -400)}):Play()
+    TS:Create(stroke, TweenInfo.new(0.5), {Transparency = 0.2}):Play()
+end
+
+local function closePanel()
+    local tweenPos = TS:Create(main, tweenClose, {Position = UDim2.new(0.5, -210, 1.3, 0)})
+    local tweenSize = TS:Create(main, tweenClose, {Size = UDim2.new(0, 0, 0, 0)})
+    tweenPos:Play()
+    tweenSize:Play()
+    TS:Create(stroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
+    tweenPos.Completed:Connect(function() main.Visible = false end)
+end
+
+-- Toggle Button Draggable + Glow
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 70, 0, 70)
+toggleBtn.Position = UDim2.new(1, -90, 0, 20)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 220, 160)
+toggleBtn.Text = "HTP"
+toggleBtn.TextColor3 = Color3.new(1,1,1)
+toggleBtn.Font = Enum.Font.GothamBlack
+toggleBtn.TextSize = 24
+toggleBtn.Parent = gui
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0,15)
+toggleCorner.Parent = toggleBtn
+
+local toggleStroke = Instance.new("UIStroke")
+toggleStroke.Color = Color3.fromRGB(255,255,255)
+toggleStroke.Thickness = 2
+toggleStroke.Parent = toggleBtn
+
+-- Draggable Toggle
+local dragging, dragStart, startPos
+toggleBtn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = toggleBtn.Position
+        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+    end
+end)
+toggleBtn.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        toggleBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+toggleBtn.MouseButton1Click:Connect(function()
+    if main.Visible then 
+        closePanel() 
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(0, 220, 160)
+    else 
+        openPanel() 
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 120)
+    end
+end)
+
+-- Hover Effects
+toggleBtn.MouseEnter:Connect(function()
+    TS:Create(toggleBtn, tweenHover, {Size = UDim2.new(0, 80, 0, 80), Rotation = 360}):Play()
+end)
+toggleBtn.MouseLeave:Connect(function()
+    TS:Create(toggleBtn, tweenHover, {Size = UDim2.new(0, 70, 0, 70), Rotation = 0}):Play()
+end)
+
+closeBtn.MouseButton1Click:Connect(closePanel)
 
 -- =============================================
--- ESP PERSISTENT SECTION UPGRADE 🔥🍱
+-- STATE VARIABLES
+-- =============================================
+local state = { 
+    infjump = false, spin = false, aimbot = false, esp = false, thirdperson = false,
+    speedhack = false, fpscam = false, freecam = false 
+}
+local movers = {}
+local espObjects = {}
+local connections = {}
+local spinAV, speedConn, jumpConn
+local spinSpeed = 600
+local aimFOV = 120
+local aimTarget = "Head"
+local walkSpeed = 16
+local jumpPowerVal = 50
+local showHealthBar = false
+
+local fovCircle = Drawing.new("Circle")
+fovCircle.Visible = false
+fovCircle.Radius = aimFOV
+fovCircle.NumSides = 64
+fovCircle.Thickness = 2
+fovCircle.Color = Color3.fromRGB(0, 255, 0)
+fovCircle.Filled = false
+fovCircle.Transparency = 0.7
+
+local function getHum() return player.Character and player.Character:FindFirstChildOfClass("Humanoid") end
+local function getHRP() return player.Character and player.Character:FindFirstChild("HumanoidRootPart") end
+local function getHead() return player.Character and player.Character:FindFirstChild("Head") end
+
+local function addConnection(name, conn)
+    connections[name] = conn
+end
+
+local function cleanMovers()
+    for _, obj in pairs(movers) do pcall(function() obj:Destroy() end) end
+    movers = {}
+end
+
+-- =============================================
+-- SPEED HACK TEXTBOX + TOGGLE
+-- =============================================
+local speedSection = Instance.new("Frame")
+speedSection.Size = UDim2.new(1,-16,0,90)
+speedSection.BackgroundTransparency = 1
+speedSection.Parent = scroll
+
+local speedTitle = Instance.new("TextLabel")
+speedTitle.Size = UDim2.new(1,0,0,28)
+speedTitle.BackgroundTransparency = 1
+speedTitle.Text = "🚀 Speed Hack (Textbox)"
+speedTitle.TextColor3 = Color3.fromRGB(255, 200, 100)
+speedTitle.Font = Enum.Font.GothamBold
+speedTitle.TextSize = 16
+speedTitle.TextXAlignment = Enum.TextXAlignment.Left
+speedTitle.Parent = speedSection
+
+local speedBox = Instance.new("TextBox")
+speedBox.Size = UDim2.new(0.48,0,0,38)
+speedBox.Position = UDim2.new(0,0,0,32)
+speedBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
+speedBox.TextColor3 = Color3.fromRGB(220,240,255)
+speedBox.PlaceholderText = "WalkSpeed (16)"
+speedBox.Text = "16"
+speedBox.Font = Enum.Font.Gotham
+speedBox.TextSize = 16
+speedBox.Parent = speedSection
+
+local speedToggle = Instance.new("TextButton")
+speedToggle.Size = UDim2.new(0.48,0,0,38)
+speedToggle.Position = UDim2.new(0.52,0,0,32)
+speedToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
+speedToggle.Text = "Speed: OFF"
+speedToggle.TextColor3 = Color3.new(1,1,1)
+speedToggle.Font = Enum.Font.GothamSemibold
+speedToggle.TextSize = 15
+speedToggle.Parent = speedSection
+
+local speedActive = false
+speedToggle.MouseButton1Click:Connect(function()
+    speedActive = not speedActive
+    state.speedhack = speedActive
+    speedToggle.Text = "Speed: " .. (speedActive and "ON" or "OFF")
+    speedToggle.BackgroundColor3 = speedActive and Color3.fromRGB(255,200,80) or Color3.fromRGB(100,100,120)
+    walkSpeed = tonumber(speedBox.Text) or 16
+    
+    if speedActive then
+        speedConn = RS.Heartbeat:Connect(function()
+            local hum = getHum()
+            if hum then hum.WalkSpeed = walkSpeed end
+        end)
+        addConnection("speed", speedConn)
+    else
+        if speedConn then speedConn:Disconnect() end
+    end
+end)
+
+speedBox.FocusLost:Connect(function()
+    walkSpeed = tonumber(speedBox.Text) or 16
+    if state.speedhack then
+        local hum = getHum()
+        if hum then hum.WalkSpeed = walkSpeed end
+    end
+end)
+
+-- =============================================
+-- JUMPPOWER TEXTBOX + INF JUMP
+-- =============================================
+local jumpSection = Instance.new("Frame")
+jumpSection.Size = UDim2.new(1,-16,0,90)
+jumpSection.BackgroundTransparency = 1
+jumpSection.Parent = scroll
+
+local jumpTitle = Instance.new("TextLabel")
+jumpTitle.Size = UDim2.new(1,0,0,28)
+jumpTitle.BackgroundTransparency = 1
+jumpTitle.Text = "🦘 JumpPower & Inf Jump"
+jumpTitle.TextColor3 = Color3.fromRGB(100, 255, 150)
+jumpTitle.Font = Enum.Font.GothamBold
+jumpTitle.TextSize = 16
+jumpTitle.TextXAlignment = Enum.TextXAlignment.Left
+jumpTitle.Parent = jumpSection
+
+local jumpBox = Instance.new("TextBox")
+jumpBox.Size = UDim2.new(0.48,0,0,38)
+jumpBox.Position = UDim2.new(0,0,0,32)
+jumpBox.BackgroundColor3 = Color3.fromRGB(30,30,50)
+jumpBox.TextColor3 = Color3.fromRGB(220,240,255)
+jumpBox.PlaceholderText = "JumpPower (50)"
+jumpBox.Text = "50"
+jumpBox.Font = Enum.Font.Gotham
+jumpBox.TextSize = 16
+jumpBox.Parent = jumpSection
+
+local infJumpBtn = Instance.new("TextButton")
+infJumpBtn.Size = UDim2.new(0.48,0,0,38)
+infJumpBtn.Position = UDim2.new(0.52,0,0,32)
+infJumpBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+infJumpBtn.Text = "Inf Jump: OFF"
+infJumpBtn.TextColor3 = Color3.new(1,1,1)
+infJumpBtn.Font = Enum.Font.GothamSemibold
+infJumpBtn.TextSize = 15
+infJumpBtn.Parent = jumpSection
+
+infJumpBtn.MouseButton1Click:Connect(function()
+    state.infjump = not state.infjump
+    infJumpBtn.Text = "Inf Jump: " .. (state.infjump and "ON" or "OFF")
+    infJumpBtn.BackgroundColor3 = state.infjump and Color3.fromRGB(100,255,150) or Color3.fromRGB(100,100,120)
+end)
+
+UIS.JumpRequest:Connect(function()
+    if state.infjump then
+        local hum = getHum()
+        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
+end)
+
+jumpBox.FocusLost:Connect(function()
+    jumpPowerVal = tonumber(jumpBox.Text) or 50
+end)
+
+jumpConn = RS.Heartbeat:Connect(function()
+    local hum = getHum()
+    if hum then hum.JumpPower = jumpPowerVal end
+end)
+addConnection("jump", jumpConn)
+
+-- =============================================
+-- CAMERA CONTROLS (FPS / FREE / RESET)
+-- =============================================
+local camSection = Instance.new("Frame")
+camSection.Size = UDim2.new(1,-16,0,140)
+camSection.BackgroundTransparency = 1
+camSection.Parent = scroll
+
+local camTitle = Instance.new("TextLabel")
+camTitle.Size = UDim2.new(1,0,0,28)
+camTitle.BackgroundTransparency = 1
+camTitle.Text = "🎥 Camera Settings"
+camTitle.TextColor3 = Color3.fromRGB(150, 255, 255)
+camTitle.Font = Enum.Font.GothamBold
+camTitle.TextSize = 16
+camTitle.TextXAlignment = Enum.TextXAlignment.Left
+camTitle.Parent = camSection
+
+local fpsBtn = Instance.new("TextButton")
+fpsBtn.Size = UDim2.new(0.3,0,0,38)
+fpsBtn.Position = UDim2.new(0,0,0,35)
+fpsBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+fpsBtn.Text = "FPS Cam: OFF"
+fpsBtn.TextColor3 = Color3.new(1,1,1)
+fpsBtn.Font = Enum.Font.GothamSemibold
+fpsBtn.TextSize = 14
+fpsBtn.Parent = camSection
+
+local freeBtn = Instance.new("TextButton")
+freeBtn.Size = UDim2.new(0.3,0,0,38)
+freeBtn.Position = UDim2.new(0.34,0,0,35)
+freeBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+freeBtn.Text = "Free Cam: OFF"
+freeBtn.TextColor3 = Color3.new(1,1,1)
+freeBtn.Font = Enum.Font.GothamSemibold
+freeBtn.TextSize = 14
+freeBtn.Parent = camSection
+
+local resetBtn = Instance.new("TextButton")
+resetBtn.Size = UDim2.new(0.3,0,0,38)
+resetBtn.Position = UDim2.new(0.67,0,0,35)
+resetBtn.BackgroundColor3 = Color3.fromRGB(100,150,255)
+resetBtn.Text = "Reset Cam"
+resetBtn.TextColor3 = Color3.new(1,1,1)
+resetBtn.Font = Enum.Font.GothamSemibold
+resetBtn.TextSize = 14
+resetBtn.Parent = camSection
+
+fpsBtn.MouseButton1Click:Connect(function()
+    state.fpscam = not state.fpscam
+    fpsBtn.Text = "FPS Cam: " .. (state.fpscam and "ON" or "OFF")
+    fpsBtn.BackgroundColor3 = state.fpscam and Color3.fromRGB(80, 200, 255) or Color3.fromRGB(100,100,120)
+    player.CameraMode = state.fpscam and Enum.CameraMode.LockFirstPerson or Enum.CameraMode.Classic
+end)
+
+freeBtn.MouseButton1Click:Connect(function()
+    state.freecam = not state.freecam
+    freeBtn.Text = "Free Cam: " .. (state.freecam and "ON" or "OFF")
+    freeBtn.BackgroundColor3 = state.freecam and Color3.fromRGB(150, 255, 100) or Color3.fromRGB(100,100,120)
+    player.CameraMode = state.freecam and Enum.CameraMode.Classic or Enum.CameraMode.LockFirstPerson
+end)
+
+resetBtn.MouseButton1Click:Connect(function()
+    state.fpscam = false
+    state.freecam = false
+    player.CameraMode = Enum.CameraMode.Classic
+    fpsBtn.Text = "FPS Cam: OFF"
+    fpsBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+    freeBtn.Text = "Free Cam: OFF"
+    freeBtn.BackgroundColor3 = Color3.fromRGB(100,100,120)
+end)
+
+-- =============================================
+-- ESP PERSISTENT (All Join, Respawn, Dead Hide)
 -- =============================================
 local espSection = Instance.new("Frame")
 espSection.Size = UDim2.new(1,-16,0,100)
 espSection.BackgroundTransparency = 1
-espSection.Parent = scroll  -- scroll dari GUI V8
+espSection.Parent = scroll
 
 local espTitle = Instance.new("TextLabel")
 espTitle.Size = UDim2.new(1,0,0,28)
 espTitle.BackgroundTransparency = 1
-espTitle.Text = "👁️ ESP Persistent (All Join)"
+espTitle.Text = "👁️ ESP Persistent (All Players)"
 espTitle.TextColor3 = Color3.fromRGB(255, 100, 255)
 espTitle.Font = Enum.Font.GothamBold
 espTitle.TextSize = 16
@@ -37,7 +426,7 @@ local espToggle = Instance.new("TextButton")
 espToggle.Size = UDim2.new(0.6,0,0,38)
 espToggle.Position = UDim2.new(0,0,0,35)
 espToggle.BackgroundColor3 = Color3.fromRGB(100,100,120)
-espToggle.Text = "ESP All Players: OFF"
+espToggle.Text = "ESP: OFF"
 espToggle.TextColor3 = Color3.new(1,1,1)
 espToggle.Font = Enum.Font.GothamSemibold
 espToggle.TextSize = 15
@@ -53,29 +442,21 @@ healthBarToggle.Font = Enum.Font.GothamSemibold
 healthBarToggle.TextSize = 13
 healthBarToggle.Parent = espSection
 
--- ESP STATE
 state.esp = false
-local showHealthBar = false
-local espObjects = {}  -- player.UserId -> {box, name, line, healthbar}
-local espConnection
 
--- CREATE ESP FOR ONE PLAYER
 local function createESP(plr)
-    if plr == player or not plr.Character or not plr.Character:FindFirstChild("HumanoidRootPart") then return end
-    
+    if plr == player or not plr.Character then return end
     local char = plr.Character
-    local hrp = char.HumanoidRootPart
+    local hrp = char:FindFirstChild("HumanoidRootPart")
     local head = char:FindFirstChild("Head")
-    if not head then return end
+    if not hrp or not head then return end
     
-    -- BOX
     local box = Drawing.new("Quad")
     box.Thickness = 2
-    box.Color = Color3.fromRGB(0, 255, 0)  -- Green alive
+    box.Color = Color3.fromRGB(0, 255, 0)
     box.Transparency = 1
     box.Filled = false
     
-    -- NAME + DIST
     local nameLabel = Drawing.new("Text")
     nameLabel.Size = 16
     nameLabel.Center = true
@@ -83,13 +464,11 @@ local function createESP(plr)
     nameLabel.Color = Color3.fromRGB(255, 255, 255)
     nameLabel.Font = 2
     
-    -- LINE TO CENTER
     local line = Drawing.new("Line")
     line.Thickness = 2
     line.Color = Color3.fromRGB(255, 0, 0)
     line.Transparency = 1
     
-    -- HEALTH BAR (Optional)
     local healthBg = Drawing.new("Quad")
     healthBg.Thickness = 3
     healthBg.Color = Color3.fromRGB(0,0,0)
@@ -105,141 +484,53 @@ local function createESP(plr)
     espObjects[plr.UserId] = {box = box, name = nameLabel, line = line, healthBg = healthBg, healthFg = healthFg, char = char, plr = plr}
 end
 
--- UPDATE ESP LOOP (PERSISTENT ALL)
 local function updateESP()
-    for userId, espData in pairs(espObjects) do
-        local plr = espData.plr
-        if plr and plr.Parent and espData.char and espData.char.Parent then
-            local char = espData.char
+    for userId, data in pairs(espObjects) do
+        local plr = data.plr
+        local char = data.char
+        if plr and char and char.Parent then
             local hum = char:FindFirstChildOfClass("Humanoid")
             local hrp = char:FindFirstChild("HumanoidRootPart")
             local head = char:FindFirstChild("Head")
             
-            if hrp and head and hum and hum.Health > 0 then  -- Alive
+            if hum and hum.Health > 0 and hrp and head then
                 local screenPos, onScreen = camera:WorldToViewportPoint(hrp.Position)
                 local headPos = camera:WorldToViewportPoint(head.Position + Vector3.new(0,0.5,0))
                 local legPos = camera:WorldToViewportPoint(hrp.Position - Vector3.new(0,3,0))
                 
                 if onScreen then
-                    -- BOX
                     local size = (headPos - legPos).Magnitude
-                    espData.box.PointA = Vector2.new(screenPos.X - size/2, headPos.Y)
-                    espData.box.PointB = Vector2.new(screenPos.X + size/2, headPos.Y)
-                    espData.box.PointC = Vector2.new(screenPos.X + size/2, legPos.Y)
-                    espData.box.PointD = Vector2.new(screenPos.X - size/2, legPos.Y)
-                    espData.box.Visible = true
-                    espData.box.Color = hum.Health < 30 and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0)  -- Red low HP
+                    data.box.PointA = Vector2.new(screenPos.X - size/2, headPos.Y)
+                    data.box.PointB = Vector2.new(screenPos.X + size/2, headPos.Y)
+                    data.box.PointC = Vector2.new(screenPos.X + size/2, legPos.Y)
+                    data.box.PointD = Vector2.new(screenPos.X - size/2, legPos.Y)
+                    data.box.Visible = true
+                    data.box.Color = hum.Health < 30 and Color3.fromRGB(255,0,0) or Color3.fromRGB(0,255,0)
                     
-                    -- NAME + DIST
                     local dist = (hrp.Position - getHRP().Position).Magnitude
-                    espData.name.Text = plr.Name .. "\n[" .. math.floor(dist) .. "]"
-                    espData.name.Position = Vector2.new(screenPos.X, headPos.Y - 30)
-                    espData.name.Visible = true
+                    data.name.Text = plr.Name .. "\n[" .. math.floor(dist) .. "]"
+                    data.name.Position = Vector2.new(screenPos.X, headPos.Y - 30)
+                    data.name.Visible = true
                     
-                    -- LINE
-                    espData.line.From = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
-                    espData.line.To = Vector2.new(screenPos.X, screenPos.Y)
-                    espData.line.Visible = true
+                    data.line.From = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
+                    data.line.To = Vector2.new(screenPos.X, screenPos.Y)
+                    data.line.Visible = true
                     
-                    -- HEALTH BAR
                     if showHealthBar then
                         local hpPercent = hum.Health / hum.MaxHealth
                         local barHeight = size * 0.6
                         local barWidth = 4
                         local barPosY = legPos.Y + (size - barHeight)/2
                         
-                        espData.healthBg.Size = Vector2.new(barWidth, barHeight)
-                        espData.healthBg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY)
-                        espData.healthBg.Visible = true
+                        data.healthBg.Size = Vector2.new(barWidth, barHeight)
+                        data.healthBg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY)
+                        data.healthBg.Visible = true
                         
-                        espData.healthFg.Size = Vector2.new(barWidth * hpPercent, barHeight)
-                        espData.healthFg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY + barHeight * (1 - hpPercent))
-                        espData.healthFg.Color = Color3.fromRGB(255 * (1 - hpPercent), 255 * hpPercent, 0)
-                        espData.healthFg.Visible = true
+                        data.healthFg.Size = Vector2.new(barWidth * hpPercent, barHeight)
+                        data.healthFg.Position = Vector2.new(screenPos.X + size/2 + 2, barPosY + barHeight * (1 - hpPercent))
+                        data.healthFg.Color = Color3.fromRGB(255 * (1 - hpPercent), 255 * hpPercent, 0)
+                        data.healthFg.Visible = true
                     end
                 else
-                    for _, obj in pairs({espData.box, espData.name, espData.line, espData.healthBg, espData.healthFg}) do
-                        obj.Visible = false
-                    end
-                end
-            else  -- Dead/Hidden
-                for _, obj in pairs({espData.box, espData.name, espData.line, espData.healthBg, espData.healthFg}) do
-                    obj.Visible = false
-                end
-            end
-        end
-    end
-end
-
--- TOGGLE ESP
-espToggle.MouseButton1Click:Connect(function()
-    state.esp = not state.esp
-    espToggle.Text = "ESP All Players: " .. (state.esp and "ON" or "OFF")
-    espToggle.BackgroundColor3 = state.esp and Color3.fromRGB(255,100,255) or Color3.fromRGB(100,100,120)
-    
-    if state.esp then
-        -- Init all current players
-        for _, plr in pairs(Players:GetPlayers()) do
-            if plr ~= player then
-                createESP(plr)
-            end
-        end
-        espConnection = RS.RenderStepped:Connect(updateESP)
-        addConnection("esp", espConnection)
-    else
-        -- Cleanup all
-        for _, espData in pairs(espObjects) do
-            for _, obj in pairs({espData.box, espData.name, espData.line, espData.healthBg, espData.healthFg}) do
-                obj:Remove()
-            end
-        end
-        espObjects = {}
-        if espConnection then espConnection:Disconnect() end
-    end
-end)
-
--- HEALTH BAR TOGGLE
-healthBarToggle.MouseButton1Click:Connect(function()
-    showHealthBar = not showHealthBar
-    healthBarToggle.Text = "Health Bar: " .. (showHealthBar and "ON" or "OFF")
-    healthBarToggle.BackgroundColor3 = showHealthBar and Color3.fromRGB(255,150,100) or Color3.fromRGB(100,150,255)
-end)
-
--- PERSISTENT HANDLERS: Join/Leave/Respawn
-Players.PlayerAdded:Connect(function(plr)
-    if state.esp and plr ~= player then
-        plr.CharacterAdded:Connect(function()
-            wait(0.5)  -- Wait load
-            createESP(plr)
-        end)
-    end
-end)
-
-Players.PlayerRemoving:Connect(function(plr)
-    if espObjects[plr.UserId] then
-        for _, obj in pairs(espObjects[plr.UserId]) do
-            if obj then obj:Remove() end
-        end
-        espObjects[plr.UserId] = nil
-    end
-end)
-
--- Auto recreate on respawn for existing
-for _, plr in pairs(Players:GetPlayers()) do
-    if plr ~= player then
-        plr.CharacterAdded:Connect(function()
-            if state.esp then
-                wait(0.5)
-                createESP(plr)
-            end
-        end)
-    end
-end
-
--- [HOVER TWEENS UNTUK ESP TOGGLES - SAMA V8]
-espToggle.MouseEnter:Connect(function() TS:Create(espToggle, tweenHover, {Size = UDim2.new(0.62,10,0,45)}):Play() end)
-espToggle.MouseLeave:Connect(function() TS:Create(espToggle, tweenHover, {Size = UDim2.new(0.6,0,0,38)}):Play() end)
-
--- [SELESAI ESP - PASTE GUI V8 DI ATAS INI + AIMBOT/SPIN DARI ORIGINAL]
-
-print("🔥 HTP V9.0 ESP PERSISTENT Loaded! All join = ESP forever! Ajani Ngawi OP 🍱")
+                    for _, obj in pairs({data.box, data.name, data.line, data.healthBg, data.healthFg}) do obj.Visible = false end
+        
